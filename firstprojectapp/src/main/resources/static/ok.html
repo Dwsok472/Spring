@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>강의 목록</title>
+</head>
+<body>
+<h1>강의 목록</h1>
+<table id="courseTable">
+  <thead>
+  <tr>
+    <th>강의명</th>
+    <th>강의 설명</th>
+    <th>삭제</th>
+  </tr>
+  </thead>
+  <tbody>
+  <!-- 강좌 목록은 여기서 보여짐 -->
+  </tbody>
+</table>
+
+<script>
+  // 페이지가 로드될 때, API를 통해 강좌 목록을 불러옵니다.
+  fetch('/api/courses/all') // REST API로 강좌 목록을 요청
+      .then(response => response.json())
+      .then(courses => {
+          const tableBody = document.querySelector('#courseTable tbody');
+          courses.forEach(course => {
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                  <td>${course.name}</td>
+                  <td>${course.description}</td>
+                  <td><button onclick="deleteCourse(${course.id})">삭제</button></td>
+              `;
+              tableBody.appendChild(row);
+          });
+      });
+
+  // 강좌 삭제 함수
+  function deleteCourse(id) {
+      fetch(`/api/courses/delete/${id}`, {
+          method: 'DELETE'
+      })
+      .then(response => {
+          if (response.ok) {
+              alert('강의가 삭제되었습니다.');
+              window.location.reload(); // 페이지 새로 고침
+          } else {
+              alert('삭제 실패!');
+          }
+      });
+  }
+</script>
+</body>
+</html>

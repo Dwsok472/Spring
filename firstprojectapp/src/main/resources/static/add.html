@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강의 추가</title>
+</head>
+<body>
+<h1>강의 추가</h1>
+<form id="courseForm">
+    <label for="name">강의명</label>
+    <input type="text" id="name" name="name" required><br><br>
+    <label for="description">강의 설명</label>
+    <input type="text" id="description" name="description" required><br><br>
+    <button type="submit">강의 추가</button>
+</form>
+
+<script>
+    document.getElementById('courseForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const course = {
+            name: document.getElementById('name').value,
+            description: document.getElementById('description').value
+        };
+
+        fetch('/api/courses/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(course)
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('강의가 추가되었습니다!');
+            window.location.href = '/ok.html'; // 강의 목록 페이지로 리디렉션
+        })
+        .catch(error => {
+            alert('강의 추가 실패!');
+        });
+    });
+</script>
+</body>
+</html>
